@@ -1,0 +1,14 @@
+# Azure Identity for DefaultAzureCredential
+azure-identity>=1.10.0
+
+# Azure Key Vault client library
+azure-keyvault-secrets>=4.8.0
+
+# Azure Blob Storage client library
+azure-storage-blob>=12.14.1 
+
+# HTTP requests
+requests>=2.31.0
+
+# Load .env for non-secret config (NBA_ENDPOINT, VAULT_NAME)
+python-dotenv>=1.0.0 

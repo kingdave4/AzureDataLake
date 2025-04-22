@@ -1,0 +1,8 @@
+.env
+Instructions/
+instructions.md
+**/.terraform/**
+*.tfstate
+.terraform.lock.hcl
+*.tfvars
+terraform.tfvars
