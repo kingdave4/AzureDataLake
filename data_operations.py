@@ -2,23 +2,26 @@ import json
 import os
 import requests
 from dotenv import load_dotenv
-from azure.identity import DefaultAzureCredential # type: ignore
-from azure.keyvault.secrets import SecretClient # type: ignore
-from azure.storage.blob import BlobServiceClient # type: ignore
+from azure.identity import DefaultAzureCredential 
+from azure.keyvault.secrets import SecretClient 
+from azure.storage.blob import BlobServiceClient 
 from requests.exceptions import RequestException
-from azure.core.exceptions import AzureError # type: ignore
+from azure.core.exceptions import AzureError
 
 
-def _get_secret(vault_name: str, secret_name: str) -> str:
+
+def _get_secret(vault_name: str, secret_name: str):
     """
     Retrieve a secret's value from Azure Key Vault.
     """
-    kv_uri     = f"https://{vault_name}.vault.azure.net/"          # Key Vault URI format :contentReference[oaicite:0]{index=0}
-    credential = DefaultAzureCredential()                           # MSI / CLI / env‑based auth :contentReference[oaicite:1]{index=1}
+    kv_uri     = f"https://{vault_name}.vault.azure.net/"          
+    credential = DefaultAzureCredential()                        
     client     = SecretClient(vault_url=kv_uri, credential=credential)
-    return client.get_secret(secret_name).value                    # Requires secrets/get permission :contentReference[oaicite:2]{index=2}
+    return client.get_secret(secret_name).value              
+     
 
-def fetch_nba_data(vault_name: str, api_key_secret: str) -> list:
+
+def fetch_nba_data(vault_name: str, api_key_secret: str):
     """
     Fetch NBA player data using the API key stored in Key Vault.
     """
@@ -33,13 +36,15 @@ def fetch_nba_data(vault_name: str, api_key_secret: str) -> list:
         print(f"[ERROR] Fetching NBA data failed: {e}")
         return []
 
-def upload_to_blob_storage(vault_name: str, data: list, container_name: str = "nba-datalake", blob_name: str = "raw-data/nba_player_data.jsonl") -> None:
+
+
+def upload_to_blob_storage(vault_name: str, data: list, container_name: str = "nba-datalake", blob_name: str = "raw-data/nba_player_data.jsonl"):
     """
     Upload NBA data to Azure Blob Storage using connection string from Key Vault.
     """
     try:
         conn_str = _get_secret(vault_name, "StorageConnectionString")
-        client   = BlobServiceClient.from_connection_string(conn_str)  # Quickstart pattern :contentReference[oaicite:4]{index=4}
+        client   = BlobServiceClient.from_connection_string(conn_str)  
 
         # Ensure container exists
         container = client.get_container_client(container_name)

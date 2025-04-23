@@ -3,6 +3,7 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from data_operations import fetch_nba_data, upload_to_blob_storage
 
+
 def main():
     # 1. Set up Key Vault client (uses MSI / Azure CLI / env creds automatically)
     vault_name = os.getenv("KEY_VAULT_NAME", "mydatalakekeyvault421")
@@ -24,3 +25,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
