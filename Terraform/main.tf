@@ -93,6 +93,13 @@ resource "azurerm_key_vault_secret" "MyApikey" {
   depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
 }
 
+resource "azurerm_key_vault_secret" "sql_administrator_login_passwordT" {
+  name         = "MySqlAdminPassword"
+  value        = var.sql_admin_password
+  key_vault_id = azurerm_key_vault.kv.id
+  depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
+}
+
 
 resource "azurerm_role_assignment" "kv_secrets_officer" {
   scope                = azurerm_key_vault.kv.id
