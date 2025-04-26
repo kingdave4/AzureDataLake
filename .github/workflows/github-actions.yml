@@ -33,7 +33,7 @@ jobs:
 
     - name: Terraform Apply
       run: |
-        terraform -chdir=Terraform apply -auto-approve"
+        terraform -chdir=Terraform apply -auto-approve
 
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
