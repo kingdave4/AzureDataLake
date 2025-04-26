@@ -1,0 +1,60 @@
+name: Terraform & Azure Function Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  TF_LOG: INFO
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan \
+        -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+
+    - name: Terraform Apply
+      run: |
+        terraform apply -auto-approve \
+          -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+
+      env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.ARM_CLIENT_ID }}
+        tenant-id: ${{ secrets.ARM_TENANT_ID }}
+        subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+    - name: Deploy Function App Code
+      uses: azure/functions-action@v1
+      with:
+        app-name: NBARefreshFunc
+        package: './nba-refresh'
