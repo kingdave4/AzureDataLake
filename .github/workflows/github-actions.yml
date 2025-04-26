@@ -32,13 +32,11 @@ jobs:
       run: terraform validate
 
     - name: Terraform Plan
-      run: terraform plan \
-        -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+      run: terraform plan var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
 
     - name: Terraform Apply
       run: |
-        terraform apply -auto-approve \
-          -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+        terraform apply -auto-approve -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"ss
 
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
