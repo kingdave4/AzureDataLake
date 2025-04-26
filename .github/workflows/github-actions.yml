@@ -31,9 +31,6 @@ jobs:
     - name: Terraform Validate
       run: terraform validate
 
-    - name: Terraform Plan
-      run: terraform plan var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
-
     - name: Terraform Apply
       run: |
         terraform apply -auto-approve -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"ss
