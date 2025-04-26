@@ -86,39 +86,54 @@ resource "azurerm_key_vault_secret" "storage_conn" {
   depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
 }
 
+resource "azurerm_key_vault_secret" "MyApikey" {
+  name         = "SportsDataApikey"
+  value        = var.Apikey
+  key_vault_id = azurerm_key_vault.kv.id
+  depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
+}
+
+
 resource "azurerm_role_assignment" "kv_secrets_officer" {
   scope                = azurerm_key_vault.kv.id
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
-// App Service Plan for Functions (Dynamic/Consumption sku)
-resource "azurerm_app_service_plan" "func_plan" {
+resource "azurerm_role_assignment" "github_ci_cd_assignment" {
+  scope              = "/subscriptions/${var.subscription_id}"
+  role_definition_id = azurerm_role_definition.github_ci_cd.role_definition_resource_id
+  principal_id       = var.sp_object_id
+}
+
+// Updated App Service Plan using azurerm_service_plan
+resource "azurerm_service_plan" "func_plan" {
   name                = "${var.prefix}-func-plan"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  kind                = "FunctionApp"
-  sku {
-    tier = "Dynamic" 
-    size = "Y1"
-  }
+  os_type             = "Linux"
+  sku_name            = "B1"
 }
 
-// Linux Function App
+
+// Updated Linux Function App definition
 resource "azurerm_linux_function_app" "nba_refresh" {
   name                       = var.function_app_name
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
-  service_plan_id            = azurerm_app_service_plan.func_plan.id
+  service_plan_id            = azurerm_service_plan.func_plan.id
   storage_account_name       = azurerm_storage_account.ST.name
   storage_account_access_key = azurerm_storage_account.ST.primary_access_key
+  functions_extension_version = "~4"
 
   site_config {
-    linux_fx_version = "Python|3.9"  
+    application_stack {
+      python_version = "3.9"
+    }
   }
 
   identity {
-    type = "SystemAssigned"       
+    type = "SystemAssigned"
   }
 
   app_settings = {

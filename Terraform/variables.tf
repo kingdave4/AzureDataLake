@@ -8,7 +8,7 @@ variable "resource_group_name" {
 variable "location" {
   description = "The Azure location where the resource group will be created"
   type        = string
-  default     = "East US" 
+  default     = "East US 2"
 }
 
 
@@ -38,7 +38,7 @@ variable "filesystem_name" {
   description = "The name of the filesystem in the storage account"
   type        = string
   default     = "synapse"
-  
+
 }
 
 
@@ -52,7 +52,7 @@ variable "synapse_workspace_name" {
 variable "keyvault_name" {
   description = "The name of the Key Vault"
   type        = string
-  default     = "mydatalakekeyvault428" 
+  default     = "mydatalakekeyvault2" 
 }
 
 variable "subscription_id" {
@@ -63,7 +63,7 @@ variable "subscription_id" {
 variable "function_app_name" {
   description = "The name of the Function App"
   type        = string
-  default     = "myfunctionapp28"
+  default     = "myfunctionappking32"
   
 }
 
@@ -82,4 +82,15 @@ variable "prefix" {
   description = "Prefix for resource names"
   type        = string
   default     = "mydatalake431"
+}
+
+variable "sp_object_id" {
+  description = "Azure AD objectId of the GitHub Service Principal"
+  type        = string
+}
+
+variable "Apikey" {
+  description = "API key for the NBA API"
+  type        = string
+  sensitive   = true
 }
