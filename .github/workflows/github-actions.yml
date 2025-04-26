@@ -33,7 +33,7 @@ jobs:
 
     - name: Terraform Apply
       run: |
-        terraform apply -auto-approve -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"ss
+        terraform -chdir=Terraform apply -auto-approve -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
 
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
