@@ -1,47 +1,51 @@
-name: Terraform & Azure Function Deployment
+name: Deploy Infrastructure & Function
 
 on:
   push:
-    branches:
-      - main
-
-env:
-  TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-  TF_LOG: INFO
+    branches: [ main ]
 
 permissions:
-  id-token: write
-  contents: read
+  id-token: write   # needed for Azure OIDC login
+  contents: read    # allows checkout of your repo
+
+env:
+  # ARM_* for Terraform AzureRM provider
+  ARM_CLIENT_ID:     ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_TENANT_ID:     ${{ secrets.ARM_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
-    - name: Checkout repo
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'
-        
-    - name: Azure Login
+    - name: Azure Login via OIDC
       uses: azure/login@v2
       with:
+        auth-type: oidc                  # use GitHub’s OIDC token
         client-id: ${{ secrets.ARM_CLIENT_ID }}
         tenant-id: ${{ secrets.ARM_TENANT_ID }}
         subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        allow-no-subscriptions: false
 
-    - name: Set up Terraform
+    - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
-      
-    - name: Export Secrets to Environment Variables
+      with:
+        terraform_version: 1.6.6
+
+    - name: Export TF_VARs from GitHub Secrets
       run: |
-        echo "TF_VAR_sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
-        echo "TF_VAR_nba_endpoint=${{ secrets.NBA_ENDPOINT }}" >> $GITHUB_ENV
-        echo "TF_VAR_sp_object_id=${{ secrets.SP_OBJECT_ID }}" >> $GITHUB_ENV
         echo "TF_VAR_apikey=${{ secrets.APIKEY }}" >> $GITHUB_ENV
+        echo "TF_VAR_sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+        echo "TF_VAR_sp_object_id=${{ secrets.SP_OBJECT_ID }}"             >> $GITHUB_ENV
+        echo "TF_VAR_nba_endpoint=${{ secrets.NBA_ENDPOINT }}"            >> $GITHUB_ENV
 
     - name: Terraform Init
       run: terraform -chdir=Terraform init
@@ -53,21 +57,16 @@ jobs:
       run: terraform -chdir=Terraform plan -out=tfplan
 
     - name: Terraform Apply
-      run: |
-        terraform -chdir=Terraform apply -auto-approve
+      run: terraform -chdir=Terraform apply -auto-approve
 
-      env:
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    - name: Set up Python for Function deployment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
 
-    - name: Deploy Function App Code
+    - name: Deploy Azure Function App
       uses: azure/functions-action@v1
       with:
         app-name: NBARefreshFunc
         package: './nba-refresh'
 
-
-
-        
