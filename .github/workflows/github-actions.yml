@@ -9,6 +9,10 @@ env:
   TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   TF_LOG: INFO
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -63,3 +67,7 @@ jobs:
       with:
         app-name: NBARefreshFunc
         package: './nba-refresh'
+
+
+
+        
