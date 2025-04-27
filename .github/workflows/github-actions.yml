@@ -29,11 +29,10 @@ jobs:
     - name: Azure Login via OIDC
       uses: azure/login@v2
       with:
-        auth-type: oidc                  # use GitHub’s OIDC token
         client-id: ${{ secrets.ARM_CLIENT_ID }}
         tenant-id: ${{ secrets.ARM_TENANT_ID }}
         subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        allow-no-subscriptions: false
+        enable-AzPSSession: true
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
