@@ -88,7 +88,7 @@ resource "azurerm_key_vault_secret" "storage_conn" {
 
 resource "azurerm_key_vault_secret" "MyApikey" {
   name         = "SportsDataApikey"
-  value        = var.Apikey
+  value        = var.apikey
   key_vault_id = azurerm_key_vault.kv.id
   depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
 }
@@ -145,7 +145,7 @@ resource "azurerm_linux_function_app" "nba_refresh" {
 
   app_settings = {
     "KEY_VAULT_NAME" = azurerm_key_vault.kv.name
-    "NBA_ENDPOINT"   = var.NBA_ENDPOINT
+    "NBA_ENDPOINT"   = var.nba_endpoint
   }
 }
 

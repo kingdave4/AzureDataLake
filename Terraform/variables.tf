@@ -73,7 +73,7 @@ variable "function_app_storage_account_name" {
   default     = "myfunctionapp"
 }
 
-variable "NBA_ENDPOINT" {
+variable "nba_endpoint" {
   description = "The NBA API endpoint"
   type        = string
 }
@@ -89,9 +89,10 @@ variable "sp_object_id" {
   type        = string
 }
 
-variable "Apikey" {
+variable "apikey" {
   description = "API key for the NBA API"
   type        = string
   sensitive   = true
 }
+
 

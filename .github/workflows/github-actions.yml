@@ -24,12 +24,22 @@ jobs:
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v3
+      
+    - name: Export Secrets to Environment Variables
+      run: |
+        echo "TF_VAR_sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+        echo "TF_VAR_nba_endpoint=${{ secrets.NBA_ENDPOINT }}" >> $GITHUB_ENV
+        echo "TF_VAR_sp_object_id=${{ secrets.SP_OBJECT_ID }}" >> $GITHUB_ENV
+        echo "TF_VAR_apikey=${{ secrets.APIKEY }}" >> $GITHUB_ENV
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform -chdir=Terraform init
 
     - name: Terraform Validate
-      run: terraform validate
+      run: terraform -chdir=Terraform validate
+
+    - name: Terraform Plan
+      run: terraform -chdir=Terraform plan -out=tfplan
 
     - name: Terraform Apply
       run: |
