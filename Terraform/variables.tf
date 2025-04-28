@@ -81,7 +81,7 @@ variable "nba_endpoint" {
 variable "prefix" {
   description = "Prefix for resource names"
   type        = string
-  default     = "mydatalake2"
+  default     = "mydatalake24"
 }
 
 variable "sp_object_id" {
