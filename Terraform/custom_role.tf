@@ -1,7 +1,10 @@
+data "azurerm_subscription" "primary" {}
+
 resource "azurerm_role_definition" "github_ci_cd" {
-  name        = "GitHub CICD Terraform Role 01"
-  scope       = "/subscriptions/${var.subscription_id}"
-  description = "Custom role for GitHub Actions to deploy infra and monitor logs"
+  name        = "GitHub-CICD-Terraform-Role"
+  scope       = data.azurerm_subscription.primary.id
+  role_definition_id = uuidv5(data.azurerm_subscription.primary.id, "GitHub-CICD-Terraform-Role")
+  description = "Custom role for GitHub Actions to deploy infrastructure and monitor logs."
 
   permissions {
     actions = [
@@ -20,12 +23,12 @@ resource "azurerm_role_definition" "github_ci_cd" {
       "Microsoft.Insights/eventtypes/*",
       "Microsoft.OperationalInsights/workspaces/*",
       "Microsoft.OperationalInsights/workspaces/api/query/action"
-
     ]
+
     not_actions = []
   }
 
   assignable_scopes = [
-    "/subscriptions/${var.subscription_id}"
+    data.azurerm_subscription.primary.id
   ]
 }
