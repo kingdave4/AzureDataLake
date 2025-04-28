@@ -15,7 +15,7 @@ variable "location" {
 variable "storage_account_name" {
   description = "The name of the storage account"
   type        = string
-  default     = "datalakestorage281"
+  default     = "datalakestorage28"
 }
 
 
@@ -63,7 +63,7 @@ variable "subscription_id" {
 variable "function_app_name" {
   description = "The name of the Function App"
   type        = string
-  default     = "myfunctionappking32"
+  default     = "myfunctionappking28"
   
 }
 
