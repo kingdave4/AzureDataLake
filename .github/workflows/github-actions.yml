@@ -48,7 +48,14 @@ jobs:
 
     - name: Terraform Init
       run: terraform -chdir=Terraform init
-
+      
+    - name: Terraform Import Existing RG
+      # Try to import the RG; if it’s already in state this will fail,
+      # so we “|| true” to avoid the job stopping on that error.
+      run: |
+        terraform -chdir=Terraform import azurerm_resource_group.rg \
+          "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/AzureDatalake-RG" || true
+          
     - name: Terraform Validate
       run: terraform -chdir=Terraform validate
 
