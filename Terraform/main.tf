@@ -107,6 +107,7 @@ resource "azurerm_role_assignment" "kv_secrets_officer" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
+
 resource "azurerm_role_assignment" "github_ci_cd_assignment" {
   scope              = "/subscriptions/${var.subscription_id}"
   role_definition_id = data.azurerm_role_definition.github_ci_cd.id
