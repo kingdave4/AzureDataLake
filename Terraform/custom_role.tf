@@ -1,9 +1,11 @@
 data "azurerm_subscription" "primary" {}
 
+resource "random_uuid" "role_def_id" {}
+
 resource "azurerm_role_definition" "github_ci_cd" {
   name        = "GitHub-CICD-Terraform-Role"
   scope       = data.azurerm_subscription.primary.id
-  role_definition_id = uuidv5(data.azurerm_subscription.primary.id, "GitHub-CICD-Terraform-Role")
+  role_definition_id = random_uuid.role_def_id.result
   description = "Custom role for GitHub Actions to deploy infrastructure and monitor logs."
 
   permissions {
