@@ -1,5 +1,5 @@
 resource "azurerm_role_definition" "github_ci_cd" {
-  name        = "GitHub CICD Terraform Role 01"
+  name        = "GitHub CICD Terraform Role"
   scope       = "/subscriptions/${var.subscription_id}"
   description = "Custom role for GitHub Actions to deploy infra and monitor logs"
 
