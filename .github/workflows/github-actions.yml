@@ -44,6 +44,9 @@ jobs:
         echo "TF_VAR_sp_object_id=${{ secrets.SP_OBJECT_ID }}"             >> $GITHUB_ENV
         echo "TF_VAR_nba_endpoint=${{ secrets.NBA_ENDPOINT }}"            >> $GITHUB_ENV
         echo "TF_VAR_subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"        >> $GITHUB_ENV
+        
+    - name: List directory contents
+      run: ls -la ../nba-refresh
 
     - name: Terraform Init
       run: terraform -chdir=Terraform init
@@ -68,10 +71,15 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
+    
+    - name: Build Azure Function App
+      run: |
+          # Your build commands here
+          dotnet build --output ../nba-refresh
 
     - name: Deploy Azure Function App
       uses: azure/functions-action@v1
       with:
         app-name: NBARefreshFunc
-        package: '../nba-refresh'
+        package: '/nba-refresh'
 
