@@ -96,6 +96,12 @@ variable "sp_object_id" {
   type        = string
 }
 
+variable "access_policies_raw" {
+  description = "Optional additional access policies"
+  type        = map(string)
+  default     = {}
+}
+
 
 variable "apikey" {
   description = "API key for the NBA API"
