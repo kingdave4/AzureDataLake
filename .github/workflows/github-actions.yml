@@ -59,8 +59,8 @@ jobs:
     - name: Import Key Vault Access Policy
       run: |
         terraform -chdir=Terraform import \
-          'azurerm_key_vault_access_policy.policy["${{ secrets.SP_OBJECT_ID }}"]' \
-            "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/AzureDatalake-RG/providers/Microsoft.KeyVault/vaults/mydatalakekeyvault673/objectId/${{ secrets.SP_OBJECT_ID }}" || true
+          'azurerm_key_vault_access_policy.terraform_sp["${{ secrets.SP_OBJECT_ID }}"]' \
+            "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/AzureDatalake-RG/providers/Microsoft.KeyVault/vaults/mydatalakekeyvault9982/objectId/${{ secrets.SP_OBJECT_ID }}" || true
 
 
     - name: Terraform Validate
