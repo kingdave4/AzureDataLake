@@ -53,31 +53,36 @@ variable "synapse_workspace_name" {
 variable "keyvault_name" {
   description = "The name of the Key Vault"
   type        = string
-  default     = "mydatalakekeyvault5825"
+  default     = "mydatalakekeyvault582"
 }
+
 
 variable "subscription_id" {
   description = "The Azure subscription ID"
   type        = string
 }
 
+
 variable "function_app_name" {
   description = "The name of the Function App"
   type        = string
-  default     = "datafunctionapp"
+  default     = "datafunctionapp341"
   
 }
+
 
 variable "function_app_storage_account_name" {
   description = "The name of the storage account for the Function App"
   type        = string
-  default     = "storagefunctionapp"
+  default     = "storagefunctionapp213"
 }
+
 
 variable "nba_endpoint" {
   description = "The NBA API endpoint"
   type        = string
 }
+
 
 variable "prefix" {
   description = "Prefix for resource names"
@@ -85,10 +90,12 @@ variable "prefix" {
   default     = "mydatalake24"
 }
 
+
 variable "sp_object_id" {
   description = "Azure AD objectId of the GitHub Service Principal"
   type        = string
 }
+
 
 variable "apikey" {
   description = "API key for the NBA API"
