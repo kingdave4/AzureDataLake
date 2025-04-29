@@ -7,7 +7,7 @@ def main(mytimer: func.TimerRequest):
     """
     Timer-triggered Azure Function to refresh the NBA Data Lake.
     """
-    vault = os.getenv("KEY_VAULT_NAME", "mydatalakekeyvault9982")             
+    vault = os.getenv("KEY_VAULT_NAME", "mydatalakekeyvault921")             
     data  = fetch_nba_data(vault, "SportsDataApiKey")
     if data:
         upload_to_blob_storage(vault, data)
