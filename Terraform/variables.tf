@@ -53,7 +53,7 @@ variable "synapse_workspace_name" {
 variable "keyvault_name" {
   description = "The name of the Key Vault"
   type        = string
-  default     = "mydatalakekeyvault9982"
+  default     = "mydatalakekeyvault921"
 }
 
 
