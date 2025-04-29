@@ -46,7 +46,7 @@ jobs:
         echo "TF_VAR_subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"        >> $GITHUB_ENV
         
     - name: List directory contents
-      run: ls -la nba-refresh/
+      run: ls -la ../..nba-refresh/
 
     - name: Terraform Init
       run: terraform -chdir=Terraform init
