@@ -15,7 +15,7 @@ variable "location" {
 variable "storage_account_name" {
   description = "The name of the storage account"
   type        = string
-  default     = "datalakestorage2815"
+  default     = "datalakestorage85"
 }
 
 
@@ -52,7 +52,7 @@ variable "synapse_workspace_name" {
 variable "keyvault_name" {
   description = "The name of the Key Vault"
   type        = string
-  default     = "mydatalakekeyvault28" 
+  default     = "mydatalakekeyvault58"
 }
 
 variable "subscription_id" {

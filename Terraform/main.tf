@@ -7,10 +7,12 @@ terraform {
   }
 }
 
+
 provider "azurerm" {
   features {}
   subscription_id = var.subscription_id
 }
+
 
 data "azurerm_client_config" "current" {}
 
@@ -19,6 +21,7 @@ resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
 }
+
 
 resource "azurerm_storage_account" "ST" {
   name                     = var.storage_account_name
@@ -29,10 +32,12 @@ resource "azurerm_storage_account" "ST" {
   is_hns_enabled           = true                                       
 }
 
+
 resource "azurerm_storage_data_lake_gen2_filesystem" "fs" {
   name               = var.filesystem_name                       
   storage_account_id = azurerm_storage_account.ST.id
 }
+
 
 resource "azurerm_synapse_workspace" "syn" {
   name                             = var.synapse_workspace_name
@@ -48,12 +53,14 @@ resource "azurerm_synapse_workspace" "syn" {
   }
 }
 
+
 resource "azurerm_role_assignment" "synapse_data_contrib" {
   scope                = azurerm_storage_account.ST.id
   role_definition_name = "Storage Blob Data Contributor"                 
   principal_id         = azurerm_synapse_workspace.syn.identity[0].principal_id
   depends_on           = [azurerm_synapse_workspace.syn]
 }
+
 
 resource "azurerm_key_vault" "kv" {
   name                        = var.keyvault_name
@@ -64,6 +71,7 @@ resource "azurerm_key_vault" "kv" {
   purge_protection_enabled    = true
   soft_delete_retention_days  = 7
 }
+
 
 resource "azurerm_key_vault_access_policy" "terraform_sp" {
   key_vault_id = azurerm_key_vault.kv.id
@@ -79,6 +87,7 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
   ]
 }
 
+
 resource "azurerm_key_vault_secret" "storage_conn" {
   name         = "StorageConnectionString"
   value        = azurerm_storage_account.ST.primary_connection_string
@@ -86,12 +95,14 @@ resource "azurerm_key_vault_secret" "storage_conn" {
   depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
 }
 
+
 resource "azurerm_key_vault_secret" "MyApikey" {
   name         = "SportsDataApikey"
   value        = var.apikey
   key_vault_id = azurerm_key_vault.kv.id
   depends_on   = [azurerm_key_vault_access_policy.terraform_sp]
 }
+
 
 resource "azurerm_key_vault_secret" "sql_administrator_login_passwordT" {
   name         = "MySqlAdminPassword"
@@ -113,6 +124,7 @@ resource "azurerm_role_assignment" "github_ci_cd_assignment" {
   role_definition_id = data.azurerm_role_definition.github_ci_cd.id
   principal_id       = var.sp_object_id
 }
+
 
 // Updated App Service Plan using azurerm_service_plan
 resource "azurerm_service_plan" "func_plan" {
