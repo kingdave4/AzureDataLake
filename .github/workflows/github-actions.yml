@@ -57,7 +57,7 @@ jobs:
       run: |
         terraform -chdir=Terraform import azurerm_resource_group.rg \
           "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/AzureDatalake-RG" || true
-          - name: Terraform Import Key Vault Access Policy
+    - name: Terraform Import Key Vault Access Policy
     - run: |
         terraform -chdir=Terraform import \
           azurerm_key_vault_access_policy.terraform_sp \
