@@ -17,6 +17,16 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 
+locals {
+  access_policies = merge(
+    {
+      (var.sp_object_id) = "Terraform SP"
+    },
+    var.access_policies_raw
+  )
+}
+
+
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
@@ -74,7 +84,7 @@ resource "azurerm_key_vault" "kv" {
 
 
 resource "azurerm_key_vault_access_policy" "terraform_sp" {
-  for_each            = var.access_policies
+  for_each            = local.access_policies
   key_vault_id = azurerm_key_vault.kv.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
