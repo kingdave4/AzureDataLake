@@ -15,7 +15,7 @@ variable "location" {
 variable "storage_account_name" {
   description = "The name of the storage account"
   type        = string
-  default     = "datalakestorage851"
+  default     = "datalakestorage8512"
 }
 
 
@@ -53,7 +53,7 @@ variable "synapse_workspace_name" {
 variable "keyvault_name" {
   description = "The name of the Key Vault"
   type        = string
-  default     = "mydatalakekeyvault5862"
+  default     = "mydatalakekeyvault5825"
 }
 
 variable "subscription_id" {
@@ -64,14 +64,14 @@ variable "subscription_id" {
 variable "function_app_name" {
   description = "The name of the Function App"
   type        = string
-  default     = "myfunctionappking281"
+  default     = "datafunctionapp"
   
 }
 
 variable "function_app_storage_account_name" {
   description = "The name of the storage account for the Function App"
   type        = string
-  default     = "myfunctionapp"
+  default     = "storagefunctionapp"
 }
 
 variable "nba_endpoint" {

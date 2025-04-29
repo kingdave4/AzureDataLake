@@ -6,7 +6,7 @@ from data_operations import fetch_nba_data, upload_to_blob_storage
 
 def main():
     # 1. Set up Key Vault client (uses MSI / Azure CLI / env creds automatically)
-    vault_name = os.getenv("KEY_VAULT_NAME", "mydatalakekeyvault5862")
+    vault_name = os.getenv("KEY_VAULT_NAME", "mydatalakekeyvault5825")
     kv_uri     = f"https://{vault_name}.vault.azure.net/"
     credential = DefaultAzureCredential()                                     
     kv_client  = SecretClient(vault_url=kv_uri, credential=credential)

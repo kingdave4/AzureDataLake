@@ -72,14 +72,9 @@ jobs:
       with:
         python-version: '3.9'
     
-    - name: Build Azure Function App
-      run: |
-          # Your build commands here
-          dotnet build --output nba_refresh
-
     - name: Deploy Azure Function App
       uses: azure/functions-action@v1
       with:
-        app-name: NBARefreshFunc
+        app-name: datafunctionapp
         package: 'nba_refresh'
 
