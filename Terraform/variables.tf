@@ -96,13 +96,6 @@ variable "sp_object_id" {
   type        = string
 }
 
-variable "access_policies" {
-  type = map(string) # key = object_id, value = description or empty string
-  default = {
-    "${var.sp_object_id}" = "Terraform SP"
-  }
-}
-
 
 variable "apikey" {
   description = "API key for the NBA API"
