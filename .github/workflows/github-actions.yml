@@ -37,9 +37,8 @@ jobs:
         python-version: '3.9'
 
     - name: Install Python Dependencies
-      run: |
-        cd MyFunctionapp
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
+      working-directory: MyFunctionapp
 
     - name: Deploy Azure Function App
       uses: azure/functions-action@v1

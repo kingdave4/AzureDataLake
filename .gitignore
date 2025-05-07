@@ -151,3 +151,4 @@ __azurite_db*__.json
 .funcignore
 .gitignore
 .vscode/*
+.terraform.tfstate.lock.info
