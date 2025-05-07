@@ -38,14 +38,11 @@ jobs:
 
     - name: Install Python Dependencies
       run: |
-        python -m pip install --upgrade pip
+        cd MyFunctionapp
         pip install -r requirements.txt
 
     - name: Deploy Azure Function App
       uses: azure/functions-action@v1
       with:
-        app-name: datafunctionapp54
-        package: ./nba_refresh
-
-
-        
+        app-name: datafunctionapp9982
+        package: ./MyFunctionapp/nba_refresh
