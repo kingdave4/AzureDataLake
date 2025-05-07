@@ -1,7 +1,6 @@
 import json
 import os
 import requests
-from dotenv import load_dotenv
 from azure.identity import DefaultAzureCredential 
 from azure.keyvault.secrets import SecretClient 
 from azure.storage.blob import BlobServiceClient 
@@ -48,10 +47,6 @@ def upload_to_blob_storage(vault_name: str, data: list, container_name: str = "n
 
         # Ensure container exists
         container = client.get_container_client(container_name)
-        try:
-            container.create_container()
-        except AzureError:
-            pass  # Already exists or access issue
 
         # Prepare and upload line‑delimited JSON
         payload   = "\n".join(json.dumps(rec) for rec in data)

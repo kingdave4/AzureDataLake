@@ -9,7 +9,11 @@ terraform {
 
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
   subscription_id = var.subscription_id
 }
 
@@ -17,13 +21,10 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 
-locals {
-  access_policies = merge(
-    {
-      (var.sp_object_id) = "Terraform SP"
-    },
-    var.access_policies_raw
-  )
+resource "random_string" "suffix" {
+  length  = 4
+  special = false
+  upper   = false
 }
 
 
@@ -34,7 +35,7 @@ resource "azurerm_resource_group" "rg" {
 
 
 resource "azurerm_storage_account" "ST" {
-  name                     = var.storage_account_name
+  name                   = "${lower(var.storage_account_name)}${random_string.suffix.result}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -42,9 +43,15 @@ resource "azurerm_storage_account" "ST" {
   is_hns_enabled           = true                                       
 }
 
+resource "azurerm_storage_container" "container" {
+  name                  = var.container_name
+  storage_account_id  = azurerm_storage_account.ST.id
+  container_access_type = "blob"
+}
+
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "fs" {
-  name               = var.filesystem_name                       
+  name               = var.filesystem_name
   storage_account_id = azurerm_storage_account.ST.id
 }
 
@@ -84,10 +91,9 @@ resource "azurerm_key_vault" "kv" {
 
 
 resource "azurerm_key_vault_access_policy" "terraform_sp" {
-  for_each            = local.access_policies
   key_vault_id = azurerm_key_vault.kv.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = each.key
+  object_id    = data.azurerm_client_config.current.object_id
 
   secret_permissions = [
     "Get",
@@ -95,6 +101,17 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
     "List",
     "Delete",
     "Recover",
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "function_app" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_linux_function_app.nba_refresh.identity[0].principal_id
+  depends_on   = [azurerm_linux_function_app.nba_refresh]
+  secret_permissions = [
+    "Get",
+    "List",
   ]
 }
 
@@ -123,13 +140,6 @@ resource "azurerm_key_vault_secret" "sql_administrator_login_passwordT" {
 }
 
 
-resource "azurerm_role_assignment" "kv_secrets_officer" {
-  scope                = azurerm_key_vault.kv.id
-  role_definition_name = "Key Vault Secrets Officer"
-  principal_id         = data.azurerm_client_config.current.object_id
-}
-
-
 resource "azurerm_role_assignment" "github_ci_cd_assignment" {
   scope              = "/subscriptions/${var.subscription_id}"
   role_definition_id = data.azurerm_role_definition.github_ci_cd.id
@@ -146,6 +156,21 @@ resource "azurerm_service_plan" "func_plan" {
   sku_name            = "B1"
 }
 
+resource "azurerm_log_analytics_workspace" "la" {
+  name                = "${var.prefix}-law"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "PerGB2018"
+}
+
+resource "azurerm_application_insights" "ai" {
+  name                = "${var.prefix}-ai"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = "web"
+  workspace_id = azurerm_log_analytics_workspace.la.id
+}
+
 
 // Updated Linux Function App definition
 resource "azurerm_linux_function_app" "nba_refresh" {
@@ -153,9 +178,10 @@ resource "azurerm_linux_function_app" "nba_refresh" {
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
   service_plan_id            = azurerm_service_plan.func_plan.id
-  storage_account_name       = azurerm_storage_account.ST.name
+  storage_account_name     = "${lower(var.storage_account_name)}${random_string.suffix.result}"
   storage_account_access_key = azurerm_storage_account.ST.primary_access_key
   functions_extension_version = "~4"
+  
 
   site_config {
     application_stack {
@@ -170,6 +196,25 @@ resource "azurerm_linux_function_app" "nba_refresh" {
   app_settings = {
     "KEY_VAULT_NAME" = azurerm_key_vault.kv.name
     "NBA_ENDPOINT"   = var.nba_endpoint
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.ai.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.ai.connection_string
   }
+   depends_on = [azurerm_application_insights.ai]
 }
+
+resource "azurerm_monitor_diagnostic_setting" "func_diagnostics" {
+  name                       = "funcDiagnostics"
+  target_resource_id         = azurerm_linux_function_app.nba_refresh.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
+  
+  enabled_log {
+    category = "FunctionAppLogs"
+  }
+
+  metric {
+    category = "AllMetrics"
+  }
+  
+}
+
 
