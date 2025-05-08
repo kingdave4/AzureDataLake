@@ -1,10 +1,8 @@
 # Azure Data Lake Deployment and Refresh
 
-**Repository:** https://github.com/kingdave4/AzureDataLake.git
-
 ## Overview
 
-This project automates provisioning of an Azure Data Lake environment and schedules periodic refreshes of NBA data into the lake. Using Terraform for IaC, it creates Azure resources (Resource Group, Storage Account, Data Lake Gen2, Synapse Workspace, Key Vault, Function App, monitoring components), while an Azure Function fetches NBA data and uploads it to Blob Storage on a timer.
+This project automates the provisioning of an Azure Data Lake environment and schedules a periodic refresh of NBA data into the lake. We use Terraform for infrastructure-as-code to create Azure resources (Resource Group, Storage Account, Data Lake Gen2, Synapse Workspace, Key Vault, Function App, Monitor, and related components). An Azure Function, triggered on a timer, fetches NBA data from a configurable API and uploads it to Blob Storage.
 
 ### Key Components
 
@@ -14,6 +12,10 @@ This project automates provisioning of an Azure Data Lake environment and schedu
 - **Azure Key Vault**: Secure secret storage.
 - **Azure Function (Python)**: Timer-triggered job to ingest NBA data.
 - **Monitoring**: Application Insights and Log Analytics for telemetry.
+
+## Architecture Diagram
+
+*(Insert or link diagram here)*
 
 ## Prerequisites
 
