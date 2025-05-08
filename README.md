@@ -15,7 +15,7 @@ This project automates the provisioning of an Azure Data Lake environment and sc
 
 ## Architecture Diagram
 
-*(Insert or link diagram here)*
+*![20250508_1541_Data Workflow Diagram_remix_01jtrpk2ccf99t4tx3v07vwspc](https://github.com/user-attachments/assets/d880bbad-f679-46dd-b169-df53dfc565b8)*
 
 ## Prerequisites
 
