@@ -8,7 +8,7 @@ from requests.exceptions import RequestException
 from azure.core.exceptions import AzureError
 
 
-
+# Fetch the secret from Azure Key Vault
 def _get_secret(vault_name: str, secret_name: str):
     """
     Retrieve a secret's value from Azure Key Vault.
@@ -19,7 +19,7 @@ def _get_secret(vault_name: str, secret_name: str):
     return client.get_secret(secret_name).value              
      
 
-
+# Fetch NBA data from the API
 def fetch_nba_data(vault_name: str, api_key_secret: str):
     """
     Fetch NBA player data using the API key stored in Key Vault.
@@ -36,7 +36,7 @@ def fetch_nba_data(vault_name: str, api_key_secret: str):
         return []
 
 
-
+# Upload NBA data to Azure Blob Storage
 def upload_to_blob_storage(vault_name: str, data: list, container_name: str = "nba-datalake", blob_name: str = "raw-data/nba_player_data.jsonl"):
     """
     Upload NBA data to Azure Blob Storage using connection string from Key Vault.

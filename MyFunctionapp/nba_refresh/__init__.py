@@ -3,6 +3,7 @@ import os
 import azure.functions as func  # type: ignore
 from data_operations import fetch_nba_data, upload_to_blob_storage
 
+# This function is triggered by a timer and fetches NBA data from an API,
 def main(mytimer: func.TimerRequest):
     """
     Timer-triggered Azure Function to refresh the NBA Data Lake.
@@ -17,3 +18,5 @@ def main(mytimer: func.TimerRequest):
         logging.info("Data lake refresh complete.")
     else:
         logging.warning("No data fetched; skipping upload.")
+
+

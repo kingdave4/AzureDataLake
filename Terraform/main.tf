@@ -140,13 +140,6 @@ resource "azurerm_key_vault_secret" "sql_administrator_login_passwordT" {
 }
 
 
-resource "azurerm_role_assignment" "github_ci_cd_assignment" {
-  scope              = "/subscriptions/${var.subscription_id}"
-  role_definition_id = data.azurerm_role_definition.github_ci_cd.id
-  principal_id       = var.sp_object_id
-}
-
-
 // Updated App Service Plan using azurerm_service_plan
 resource "azurerm_service_plan" "func_plan" {
   name                = "${var.prefix}-func-plan"
