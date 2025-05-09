@@ -17,8 +17,7 @@ This project automates the provisioning of an Azure Data Lake environment and sc
 
 
 ## Architecture Diagram
-
-*![alt text](image.png)*
+![alt text](image-1.png)
 
 ## Prerequisites
 
