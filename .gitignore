@@ -4,6 +4,7 @@
 .terraform.lock.hcl
 *.tfvars
 terraform.tfvars
+secrets.tfvars
 terraform.tfstate.backup
 .python_packages
 __pycache__

@@ -4,18 +4,21 @@
 
 This project automates the provisioning of an Azure Data Lake environment and schedules a periodic refresh of NBA data into the lake. We use Terraform for infrastructure-as-code to create Azure resources (Resource Group, Storage Account, Data Lake Gen2, Synapse Workspace, Key Vault, Function App, Monitor, and related components). An Azure Function, triggered on a timer, fetches NBA data from a configurable API and uploads it to Blob Storage.
 
+
 ### Key Components
 
-- **Terraform**: Infrastructure-as-code for Azure resources.
-- **Azure Data Lake Gen2**: Hierarchical namespace–enabled storage for analytics.
-- **Azure Synapse Workspace**: SQL analytics bound to the Data Lake.
-- **Azure Key Vault**: Secure secret storage.
-- **Azure Function (Python)**: Timer-triggered job to ingest NBA data.
-- **Monitoring**: Application Insights and Log Analytics for telemetry.
+- **Terraform**: Infrastructure-as-code that reliably provisions and configures Azure resources, ensuring consistency and repeatability.
+- **Azure Data Lake Gen2**: Provides a high-performance, hierarchical namespace–enabled storage layer optimized for analytics workloads.
+- **Azure Synapse Workspace**: Offers integrated analytics with both serverless SQL and Spark engines, enabling rapid querying of data stored in the Data Lake for BI and data science scenarios.
+- **Azure Key Vault**: Centralizes and secures application secrets, connection strings, and certificates; integrates with managed identities to enforce least-privilege access without embedding sensitive values in code or Terraform state.
+- **Azure Function (Python)**: Serverless compute that runs code on-demand, triggered by a timer for periodic data ingestion without managing servers.
+- **Application Insights**: Provides deep monitoring, distributed tracing, and alerting for the Function App, helping diagnose performance issues and exceptions in real time.
+- **Azure Monitor (Log Analytics)**: Collects, aggregates, and analyzes telemetry across resources; enables custom log queries and dashboards for long-term monitoring and operational insights.
+
 
 ## Architecture Diagram
 
-*![20250508_1541_Data Workflow Diagram_remix_01jtrpk2ccf99t4tx3v07vwspc](https://github.com/user-attachments/assets/d880bbad-f679-46dd-b169-df53dfc565b8)*
+*![alt text](image.png)*
 
 ## Prerequisites
 

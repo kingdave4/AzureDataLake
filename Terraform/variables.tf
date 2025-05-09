@@ -51,6 +51,7 @@ variable "keyvault_name" {
 variable "subscription_id" {
   description = "The Azure subscription ID"
   type        = string
+  sensitive = true
 }
 
 variable "function_app_name" {
@@ -68,6 +69,7 @@ variable "function_app_storage_account_name" {
 variable "nba_endpoint" {
   description = "The NBA API endpoint"
   type        = string
+  sensitive = true
 }
 
 variable "prefix" {
@@ -79,6 +81,7 @@ variable "prefix" {
 variable "sp_object_id" {
   description = "Azure AD objectId of the Terraform or GitHub Service Principal. Must be an OBJECT ID, not App ID."
   type        = string
+  sensitive = true
 }
 
 variable "apikey" {
