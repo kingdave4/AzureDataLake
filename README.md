@@ -131,7 +131,7 @@ FROM OPENROWSET(
 WITH (
     line varchar(max)
 ) AS [result]
-
+```
 ![Synapse Workspace](image.png)
 
 
