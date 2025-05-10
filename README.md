@@ -26,6 +26,8 @@ This project automates the provisioning of an Azure Data Lake environment and sc
 - Azure CLI configured to target your subscription
 - Python 3.9+ for local testing
 - Git for cloning the repo
+- NBA_ENDPOINT: Sportsdata.io API endpoint
+- SPORTS_DATA_API_KEY: Sportsdata.io API key
 
 ## Getting Started
 
