@@ -116,6 +116,25 @@ def main(mytimer: func.TimerRequest):
 - **Live Logs:** `func azure functionapp log stream --name datafunctionapp54`
 - **Application Insights:** Metrics and traces in Azure Portal under the Function’s AI resource
 
+## Synapse example Query & Results
+Make sure to go to Security then networking in side synapse workstation to add your IP and give it access to Firewall and then click save.
+##### Run the following in your Synapse SQL-on-demand pool:
+
+```sql
+SELECT TOP 10 *
+FROM OPENROWSET(
+  BULK 'https://<storage-account>.dfs.core.windows.net/<container>/raw-data/nba_player_data.jsonl',
+  FORMAT = 'CSV',
+  FIELDTERMINATOR = '0x0b',
+  FIELDQUOTE = '0x0b'
+) 
+WITH (
+    line varchar(max)
+) AS [result]
+
+![Synapse Workspace](image.png)
+
+
 ## Cleanup
 
 To tear down all resources:
