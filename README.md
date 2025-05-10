@@ -118,7 +118,7 @@ def main(mytimer: func.TimerRequest):
 
 ## Synapse example Query & Results
 Make sure to go to Security then networking in side synapse workstation to add your IP and give it access to Firewall and then click save.
-##### Run the following in your Synapse SQL-on-demand pool:
+### Run the following in your Synapse SQL-on-demand pool:
 
 ```sql
 SELECT TOP 10 *
